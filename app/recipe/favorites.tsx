@@ -12,13 +12,6 @@ type Meal = {
 export default function FavoritesScreen() {
   const { favorites } = useFavorites();
   const router = useRouter();
-
-  // Per mostrare le info dettagliate delle ricette preferite,
-  // devi fetchare i dettagli o averli salvati da qualche parte.
-  // Qui ipotizziamo di avere solo gli id, quindi potresti fare fetch per ogni id,
-  // oppure salvare l'intero oggetto meal quando si aggiunge ai preferiti.
-  // Per semplicità, facciamo un fetch per ogni preferito qui (non ottimale, ma didattico).
-
   const [favMeals, setFavMeals] = React.useState<Meal[]>([]);
   const [loading, setLoading] = React.useState(true);
 
