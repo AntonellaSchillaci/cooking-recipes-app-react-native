@@ -10,7 +10,7 @@ type Meal = {
 };
 
 export default function FavoritesScreen() {
-  const { favorites } = useFavorites();
+  const { favorites, toggleFavorite } = useFavorites();
   const router = useRouter();
   const [favMeals, setFavMeals] = React.useState<Meal[]>([]);
   const [loading, setLoading] = React.useState(true);
@@ -51,28 +51,37 @@ export default function FavoritesScreen() {
   }
 
   return (
-    <><Stack.Screen options={{ title: 'Preferiti', headerBackTitle: 'Back' }} />
-        <View style={styles.container}>
-          {favMeals.length === 0 ? (
-              <View style={styles.centered}>
-                  <Text style={styles.emptyText}>Nessuna ricetta aggiunta ai preferiti.</Text>
+    <>
+      <Stack.Screen options={{ title: 'Preferiti', headerBackTitle: 'Back' }} />
+      <View style={styles.container}>
+        {favMeals.length === 0 ? (
+          <View style={styles.centered}>
+            <Text style={styles.emptyText}>Nessuna ricetta aggiunta ai preferiti.</Text>
+          </View>
+        ) : (
+          <FlatList
+            data={favMeals}
+            keyExtractor={(item) => item.idMeal}
+            renderItem={({ item }) => (
+              <View style={styles.card}>
+                <TouchableOpacity onPress={() => router.push(`/recipe/${item.idMeal}`)}>
+                  <Image source={{ uri: item.strMealThumb }} style={styles.image} />
+                  <Text style={styles.title}>{item.strMeal}</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.removeButton}
+                  onPress={() => toggleFavorite(item.idMeal)}
+                >
+                  <Text style={styles.removeButtonText}>Rimuovi dai preferiti</Text>
+                </TouchableOpacity>
               </View>
-          ) : (
-              <FlatList
-                  data={favMeals}
-                  keyExtractor={(item) => item.idMeal}
-                  renderItem={({ item }) => (
-                      <TouchableOpacity
-                          style={styles.card}
-                          onPress={() => router.push(`/recipe/${item.idMeal}`)}
-                      >
-                          <Image source={{ uri: item.strMealThumb }} style={styles.image} />
-                          <Text style={styles.title}>{item.strMeal}</Text>
-                      </TouchableOpacity>
-                  )}
-                  contentContainerStyle={styles.list} />
-          )}
-      </View></>
+            )}
+            contentContainerStyle={styles.list}
+          />
+        )}
+      </View>
+    </>
   );
 }
 
@@ -81,19 +90,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fffec7',
     paddingTop: 50,
-  },
-  backButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    marginBottom: 10,
-    backgroundColor: '#bb5948',
-    alignSelf: 'flex-start',
-    borderRadius: 8,
-  },
-  backButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 16,
   },
   centered: {
     flex: 1,
@@ -123,5 +119,17 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 18,
     color: '#fff',
+  },
+  removeButton: {
+    backgroundColor: '#fff',
+    paddingVertical: 10,
+    alignItems: 'center',
+    borderTopWidth: 1,
+    borderColor: '#eee',
+  },
+  removeButtonText: {
+    color: '#bb5948',
+    fontWeight: 'bold',
+    fontSize: 16,
   },
 });
