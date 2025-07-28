@@ -60,6 +60,9 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   list: {
     padding: 16,
+    backgroundColor: '#fffec7',
+    paddingBottom: 100,
+    paddingTop: 100,
   },
   card: {
     marginBottom: 20,
