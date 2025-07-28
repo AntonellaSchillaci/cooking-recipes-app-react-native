@@ -3,6 +3,10 @@ import { useLocalSearchParams, Stack } from 'expo-router';
 import { View, Text, StyleSheet, Image, ScrollView, ActivityIndicator, 
          Linking, TouchableOpacity } from 'react-native';
 
+import { useFavorites } from '@/hooks/useFavorites';
+import { Ionicons } from '@expo/vector-icons';
+
+
 type MealDetail = {
   idMeal: string;
   strMeal: string;
@@ -16,6 +20,9 @@ export default function RecipeDetail() {
   const { id } = useLocalSearchParams();
   const [meal, setMeal] = useState<MealDetail | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const { toggleFavorite, isFavorite } = useFavorites();
+  const isFav =meal ? isFavorite(meal.idMeal) : false;
  
 
 
@@ -65,11 +72,15 @@ export default function RecipeDetail() {
     <>
         <Stack.Screen options={{ 
             title: meal.strMeal,
-            headerBackTitle: 'Home',
+            headerBackTitle: 'Back',
         }} />
         <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 40 }}>
           <Text style={styles.title}>{meal.strMeal}</Text>
           <Image source={{ uri: meal.strMealThumb }} style={styles.image} />
+          <TouchableOpacity onPress={() => toggleFavorite(meal.idMeal)} style={{ position: 'absolute', right: 90, top:2 }}>
+            <Ionicons name={isFav ? 'heart' : 'heart-outline'} style={styles.icon} />
+          </TouchableOpacity>
+
           <Text style={styles.sectionTitle}>Ingredienti</Text>
           {ingredients.map((item, idx) => (
               <Text key={idx} style={styles.ingredient}>🍳{item}</Text>
@@ -136,4 +147,8 @@ const styles = StyleSheet.create({
     color: 'blue',
     textDecorationLine: 'underline',
   },
+  icon: {
+    fontSize: 30,
+    color: '#bb5948',
+  }
 });

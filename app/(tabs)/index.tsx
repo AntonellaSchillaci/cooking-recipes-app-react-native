@@ -53,19 +53,28 @@ export default function HomeScreen() {
   );
 
   return (
-    <>
+    <View style={{ flex: 1 }}>
       <TextInput 
-      placeholder="Cerca una ricetta..."
-      value={searchText}
-      onChangeText={setSearchText}
-      style={styles.searchInput}
-    />
-    <FlatList
-      data={filteredMeals}
-      renderItem={renderItem}
-      keyExtractor={(item) => item.idMeal}
-      contentContainerStyle={styles.list} />
-      </>
+        placeholder="Cerca una ricetta..."
+        value={searchText}
+        onChangeText={setSearchText}
+        style={styles.searchInput}
+      />
+
+      <TouchableOpacity
+        style={styles.favButton}
+        onPress={() => router.push('/recipe/favorites')}
+      >
+        <Text style={styles.favButtonText}>Preferiti</Text>
+      </TouchableOpacity>
+
+      <FlatList
+        data={filteredMeals}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.idMeal}
+        contentContainerStyle={styles.list}
+      />
+    </View>
   );
 }
 
@@ -74,7 +83,7 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: '#fffec7',
     paddingBottom: 100,
-    paddingTop: 50,
+    paddingTop: 10,
   },
   card: {
     marginBottom: 20,
@@ -106,6 +115,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     backgroundColor: '#fff',
     marginTop: 60,
+    marginHorizontal: 16,
   },
-  
+  favButton: {
+    marginHorizontal: 16,
+    marginVertical: 10,
+    backgroundColor: '#bb5948',
+    paddingVertical: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  favButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
 });
