@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, ActivityIndicator, TextInput } from 'react-native';
 import { useRouter } from 'expo-router';
 
 type Meal = {
@@ -12,6 +12,7 @@ export default function HomeScreen() {
   const [meals, setMeals] = useState<Meal[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const [searchText, setSearchText] = useState('');
 
   useEffect(() => {
     const fetchMeals = async () => {
@@ -47,13 +48,24 @@ export default function HomeScreen() {
     </TouchableOpacity>
   );
 
+  const filteredMeals = meals.filter((meal) =>
+    meal.strMeal.toLowerCase().includes(searchText.toLowerCase())
+  );
+
   return (
+    <>
+      <TextInput 
+      placeholder="Cerca una ricetta..."
+      value={searchText}
+      onChangeText={setSearchText}
+      style={styles.searchInput}
+    />
     <FlatList
-      data={meals}
+      data={filteredMeals}
       renderItem={renderItem}
       keyExtractor={(item) => item.idMeal}
-      contentContainerStyle={styles.list}
-    />
+      contentContainerStyle={styles.list} />
+      </>
   );
 }
 
@@ -62,7 +74,7 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: '#fffec7',
     paddingBottom: 100,
-    paddingTop: 100,
+    paddingTop: 50,
   },
   card: {
     marginBottom: 20,
@@ -86,4 +98,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  searchInput: {
+    height: 40,
+    borderColor: '#bb5948',
+    borderWidth: 3,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    backgroundColor: '#fff',
+    marginTop: 60,
+  },
+  
 });
